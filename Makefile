@@ -56,7 +56,7 @@ clean:
 install:
 	@for d in $(SUBDIRS); do $(MAKE) -C $$d install; done
 
-.PHONY:	$(SUBDIRS) clean depend
+.PHONY:	$(SUBDIRS) clean install check_gcc clean
 
 #
 # on both platforms you must use gcc 3.0 or higher 
