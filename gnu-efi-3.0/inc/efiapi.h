@@ -615,6 +615,15 @@ typedef struct {
   VOID*    CapsulePtr[1];
 } EFI_CAPSULE_TABLE;
 
+#pragma pack(1)
+typedef struct {
+  UINT16 VariableTotalSize;
+  EFI_GUID CapsuleGuid;
+  EFI_TIME CapsuleProcessed;
+  EFI_STATUS CapsuleStatus;
+} EFI_CAPSULE_REPORT_TABLE;
+#pragma pack()
+
 #define CAPSULE_FLAGS_PERSIST_ACROSS_RESET          0x00010000
 #define CAPSULE_FLAGS_POPULATE_SYSTEM_TABLE         0x00020000
 #define CAPSULE_FLAGS_INITIATE_RESET                0x00040000
@@ -965,6 +974,8 @@ typedef struct _EFI_BOOT_SERVICES {
 #define SAL_SYSTEM_TABLE_GUID    \
     { 0xeb9d2d32, 0x2d88, 0x11d3, {0x9a, 0x16, 0x0, 0x90, 0x27, 0x3f, 0xc1, 0x4d} }
 
+#define EFI_CAPSULE_REPORT_GUID \
+    { 0x39b68c46, 0xf7fb, 0x441b, {0xb6, 0xec, 0x16, 0xb0, 0xf6, 0x98, 0x21, 0xf3} }
 
 typedef struct _EFI_CONFIGURATION_TABLE {
     EFI_GUID                VendorGuid;
