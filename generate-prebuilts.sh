@@ -15,6 +15,10 @@
 
 PREBUILT_TOP=$ANDROID_BUILD_TOP/prebuilts/tools
 
+set -e
+
+pushd gnu-efi-3.0
+
 copy_to_prebuilts()
 {
     DEST_DIR=$PREBUILT_TOP/linux-$2/gnu-efi/
@@ -64,12 +68,12 @@ make ARCH=x86_64 clean
 make ARCH=ia32 clean
 
 # Generate prebuilts for x86_64
-make ARCH=x86_64 CC=$ANDROID_BUILD_TOP/prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.7-4.6/bin/x86_64-linux-gcc
+make ARCH=x86_64
 copy_to_prebuilts x86_64 x86_64
 make ARCH=x86_64 clean
 
 # Generate prebuilts for ia32
-make ARCH=ia32 CC=$ANDROID_BUILD_TOP//prebuilts/gcc/linux-x86/host/i686-linux-glibc2.7-4.6/bin/i686-linux-gcc
+make ARCH=ia32
 copy_to_prebuilts ia32 x86
 make ARCH=ia32 clean
 
@@ -85,3 +89,5 @@ if [ "$add_prebuilts" == "1" ]; then
 
     echo "[NOTICE] Please remember to commit the prebuilts under $PREBUILT_TOP"
 fi
+
+popd
