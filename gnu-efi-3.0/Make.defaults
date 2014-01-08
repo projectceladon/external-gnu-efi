@@ -50,16 +50,6 @@ PREFIX       := /usr/local
 LIBDIR 	     := $(PREFIX)/lib
 INSTALL	     := install
 
-# Host/target identification
-OS	     := $(shell uname -s)
-HOSTARCH     := $(shell uname -m | sed s,i[3456789]86,ia32,)
-ARCH	     := $(shell uname -m | sed s,i[3456789]86,ia32,)
-
-# FreeBSD (and possibly others) reports amd64 instead of x86_64
-ifeq ($(ARCH),amd64)
-  override ARCH := x86_64
-endif
-
 # Compilation tools
 prefix       := /usr/bin/
 CC           := $(prefix)gcc
@@ -69,6 +59,16 @@ AR           := $(prefix)ar
 RANLIB       := $(prefix)ranlib
 OBJCOPY      := $(prefix)objcopy
 
+
+# Host/target identification
+OS	     := $(shell uname -s)
+HOSTARCH     := $(shell $(CC) -dumpmachine | cut -f1 -d- | sed s,i[3456789]86,ia32,)
+ARCH	     := $(shell uname -m | sed s,i[3456789]86,ia32,)
+
+# FreeBSD (and possibly others) reports amd64 instead of x86_64
+ifeq ($(ARCH),amd64)
+  override ARCH := x86_64
+endif
 
 #
 # Variables below derived from variables above
