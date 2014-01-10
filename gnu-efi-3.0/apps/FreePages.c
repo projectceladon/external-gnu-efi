@@ -60,6 +60,7 @@ Available 00000000709FC000-00000000710E3FFF 00000000000006E8 000000000000000F
 
 #include <efi.h>
 #include <efilib.h>
+#include <argify.h>
 
 /*
  * FreePages:  __PhysAddr__ __PgCnt__
@@ -70,61 +71,10 @@ Available 00000000709FC000-00000000710E3FFF 00000000000006E8 000000000000000F
 
 #define MAX_ADDR ((1ULL << 46) - 1)
 
-#define	MAX_ARGS 256
-
-#define CHAR_SPACE L' '
-
+#ifdef DEBUG
+#undef DEBUG
+#endif
 #define DEBUG 0
-
-INTN
-argify(CHAR16 *buf, UINTN len, CHAR16 **argv)   
-{
-
-        UINTN     i=0, j=0;
-        CHAR16   *p = buf;
-	
-        if (buf == 0) { 
-		argv[0] = NULL;
-		return 0;
-	}
-	/* len represents the number of bytes, not the number of 16 bytes chars */
-	len = len >> 1;
-
-	/*
-	 * Here we use CHAR_NULL as the terminator rather than the length
-	 * because it seems like the EFI shell return rather bogus values for it.
-	 * Apparently, we are guaranteed to find the '\0' character in the buffer
-	 * where the real input arguments stop, so we use it instead.
-	 */
-	for(;;) {
-		while (buf[i] == CHAR_SPACE && buf[i] != CHAR_NULL && i < len) i++;
-
-		if (buf[i] == CHAR_NULL || i == len) goto end;
-
-		p = buf+i;
-		i++;
-
-		while (buf[i] != CHAR_SPACE && buf[i] != CHAR_NULL && i < len) i++;
-
-		argv[j++] = p;
-
-		if (buf[i] == CHAR_NULL) goto end;
-
-		buf[i]  = CHAR_NULL;
-
-		if (i == len)  goto end;
-
-		i++;
-
-		if (j == MAX_ARGS-1) {
-			Print(L"too many arguments (%d) truncating\n", j);
-			goto end;
-		}
-	}
-end:
-        argv[j] = NULL;
-	return j;
-}
 
 
 EFI_STATUS
