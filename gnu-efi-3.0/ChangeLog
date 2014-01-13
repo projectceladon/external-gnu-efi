@@ -1,3 +1,86 @@
+2014-01-13 Nigel Croxon <nigel.croxon@hp.com>
+   Implement VSPrint function, prints a formatted unicode string to a buffer.
+       
+    Signed-off-by: Jeremy Compostella <jeremy.compostella@gmail.com>
+    Signed-off-by: Nigel Croxon <nigel.croxon@hp.com>
+
+2014-01-10 Nigel Croxon <nigel.croxon@hp.com>
+    Created lib/argify.c and inc/argify.h containing the function argify.
+    It contains verbatim copy of the comment at beginning of file from
+    elilo.
+    There was no COPYING file in the elilo source that the comment refers to.
+
+    Signed-off-by: Jerry Hoemann <jerry.hoemann@hp.com>
+    Signed-off-by: Nigel Croxon <nigel.croxon@hp.com>
+
+2014-01-08 Nigel Croxon <nigel.croxon@hp.com>
+    The information needed is not really the host architecture as given by
+    the kernel arch. The information actually needed is the default target
+    of gcc.
+	        
+    Signed-off-by: Sylvain Gault <sylvain.gault@gmail.com>
+    Signed-off-by: Nigel Croxon <nigel.croxon@hp.com>
+
+2013-10-11 Nigel Croxon <nigel.croxon@hp.com>
+    Added support for SetVariable to store volatile variable,
+    and SetNVVariable to store non volatile variable.
+	    
+    Signed-off-by: Sylvain Chouleur <sylvain.chouleur@gmail.com>
+    Signed-off-by: Nigel Croxon <nigel.croxon@hp.com>
+
+2013-10-07 Nigel Croxon <nigel.croxon@hp.com>
+
+    Atoi needs to have consistent declaration/definition.
+    
+    Signed-off-by: Nigel Croxon <nigel.croxon@hp.com>
+
+2013-10-07 Nigel Croxon <nigel.croxon@hp.com>
+    if you have a function that takes const arguments and then
+    e.g. tries to copy StrCmp, gcc will give you warnings about those
+    calls, and the warnings are right.  These clutter up other things
+    you might miss that you should be more concered about.
+
+    You could work around it through vigorous typecasting
+    to non-const types, but why should you have to? All of these
+    functions are regorously defined as not changing their input
+    - it is const, and should be marked as such.
+
+    Signed-off-by: Peter Jones <pjones@redhat.com>
+
+2013-10-02 Nigel Croxon <nigel.croxon@hp.com>
+
+    Added two simple applications to allocate/free memory at EFI.
+    Used to test/find memory fragmentation issues linux.
+	    
+    Signed-off-by: Jerry Hoemann <jerry.hoemann@hp.com>
+    Signed-off-by: Nigel Croxon <nigel.croxon@hp.com>
+
+2013-06-25 Nigel Croxon <nigel.croxon@hp.com>
+    Sample boot service driver.
+        
+    Signed-off-by: David Decotigny <decot@googlers.com>
+
+2013-06-25 Nigel Croxon <nigel.croxon@hp.com>
+Date:   Tue Jun 25 08:47:03 2013 -0400
+
+    Be more pedantic when linking, don't allow duplicate symbols,
+    abort upon first error. Also make sure linker script comes 
+    last for apps.
+
+    Signed-off-by: David Decotigny <decot@googlers.com>
+
+2013-06-25 Nigel Croxon <nigel.croxon@hp.com>
+    Fix compilation on x86_64 without HAVE_USE_MS_ABI
+    make -C apps would fail on tcc.c because uefi_call_wrapper()
+    doesn't deal correctly with efi_callO-type invocation.
+
+    Signed-off-by: David Decotigny <decot@googlers.com>
+
+2013-06-12 Nigel Croxon <nigel.croxon@hp.com>
+    Fix typo when disabling mno-mmx
+        
+    Signed-Off-By: Nigel Croxon <nigel.croxon@hp.com>
+
 2013-06-12 Nigel Croxon <nigel.croxon@hp.com>
     Disable MMX and SSE
     
