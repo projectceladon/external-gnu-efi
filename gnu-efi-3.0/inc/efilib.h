@@ -24,6 +24,7 @@ Revision History
 #include "efilibplat.h"
 #include "efilink.h"
 #include "efirtlib.h"
+#include "efistdarg.h"
 #include "pci22.h"
 #include "libsmbios.h"
 
@@ -392,11 +393,25 @@ Print (
     );
 
 UINTN
+VPrint (
+    IN CHAR16   *fmt,
+    va_list     args
+    );
+
+UINTN
 SPrint (
     OUT CHAR16  *Str,
     IN UINTN    StrSize,
     IN CHAR16   *fmt,
     ...
+    );
+
+UINTN
+VSPrint (
+    OUT CHAR16  *Str,
+    IN UINTN    StrSize,
+    IN CHAR16   *fmt,
+    va_list     args
     );
 
 CHAR16 *
