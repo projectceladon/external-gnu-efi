@@ -1007,7 +1007,7 @@ LibDuplicateDevicePathInstance (
     )
 {
     EFI_DEVICE_PATH     *NewDevPath,*DevicePathInst,*Temp;
-    UINTN               Size;    
+    UINTN               Size = 0;    
 
     //
     // get the size of an instance from the input
