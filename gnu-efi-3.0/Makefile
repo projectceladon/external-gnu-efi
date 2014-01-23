@@ -34,7 +34,7 @@
 #    SUCH DAMAGE.
 #
 
-SRCDIR = .
+SRCDIR = $(shell pwd)
 
 VPATH = $(SRCDIR)
 
@@ -69,18 +69,21 @@ mkvars:
 	@echo prefix=$(prefix)
 	@echo PREFIX=$(PREFIX)
 	@echo RANLIB=$(RANLIB)
+	@echo SRCDIR=$(SRCDIR)
 	@echo TOPDIR=$(TOPDIR)
 
 $(SUBDIRS):
 	mkdir -p $@
-	$(MAKE) -C $@ -f $(SRCDIR)/../$@/Makefile SRCDIR=$(SRCDIR)/../$@ ARCH=$(ARCH)
+	$(MAKE) -C $@ -f $(SRCDIR)/$@/Makefile SRCDIR=$(SRCDIR)/$@ ARCH=$(ARCH)
 
 clean:
 	rm -f *~
-	@for d in $(SUBDIRS); do $(MAKE) -C $$d clean; done
+	@for d in $(SUBDIRS); do $(MAKE) -C $$d -f $(SRCDIR)/$$d/Makefile SRCDIR=$(SRCDIR)/$$d  clean; done
 
 install:
-	@for d in $(SUBDIRS); do $(MAKE) -C $$d install; done
+	@for d in $(SUBDIRS); do \
+		mkdir -p $$d; \
+		$(MAKE) -C $$d -f $(SRCDIR)/$$d/Makefile SRCDIR=$(SRCDIR)/$$d install; done
 
 .PHONY:	$(SUBDIRS) clean depend
 
