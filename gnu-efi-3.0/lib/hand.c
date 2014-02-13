@@ -126,6 +126,7 @@ LibLocateHandleByDiskSignature (
     // Initialize for GrowBuffer loop
     //
 
+    Status = EFI_SUCCESS;
     BlockIoBuffer = NULL;
     BufferSize = 50 * sizeof(EFI_HANDLE);
 
@@ -339,6 +340,7 @@ LibFileInfo (
     // Initialize for GrowBuffer loop
     //
 
+    Status = EFI_SUCCESS;
     Buffer = NULL;
     BufferSize = SIZE_OF_EFI_FILE_INFO + 200;
 
@@ -374,6 +376,7 @@ LibFileSystemInfo (
     // Initialize for GrowBuffer loop
     //
 
+    Status = EFI_SUCCESS;
     Buffer = NULL;
     BufferSize = SIZE_OF_EFI_FILE_SYSTEM_INFO + 200;
 
@@ -408,6 +411,7 @@ LibFileSystemVolumeLabelInfo (
     // Initialize for GrowBuffer loop
     //
 
+    Status = EFI_SUCCESS;
     Buffer = NULL;
     BufferSize = SIZE_OF_EFI_FILE_SYSTEM_VOLUME_LABEL_INFO + 200;
 
