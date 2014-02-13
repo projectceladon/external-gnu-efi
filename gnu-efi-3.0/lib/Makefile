@@ -43,7 +43,7 @@ include $(SRCDIR)/../Make.defaults
 TOPDIR = $(SRCDIR)/..
 
 CDIR = $(TOPDIR)/..
-FILES = argify boxdraw smbios console crc data debug dpath  \
+FILES = ParseCmdLine boxdraw smbios console crc data debug dpath  \
         error event guid hand hw init lock   \
         misc print sread str \
 	runtime/rtlock runtime/efirtlib runtime/rtstr runtime/vm runtime/rtdata  \
