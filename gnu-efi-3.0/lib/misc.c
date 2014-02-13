@@ -165,8 +165,6 @@ Returns:
 
     if (!*Buffer && BufferSize) {
         *Status = EFI_BUFFER_TOO_SMALL;
-    } else {
-	*Status = EFI_SUCCESS;
     }
 
     //
@@ -218,6 +216,7 @@ LibMemoryMap (
     // Initialize for GrowBuffer loop
     //
 
+    Status = EFI_SUCCESS;
     Buffer = NULL;
     BufferSize = sizeof(EFI_MEMORY_DESCRIPTOR);
 
