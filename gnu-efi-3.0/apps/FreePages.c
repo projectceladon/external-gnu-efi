@@ -60,7 +60,7 @@ Available 00000000709FC000-00000000710E3FFF 00000000000006E8 000000000000000F
 
 #include <efi.h>
 #include <efilib.h>
-#include <argify.h>
+#include <ParseCmdLine.h>
 
 /*
  * FreePages:  __PhysAddr__ __PgCnt__
@@ -88,6 +88,7 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
 	CHAR16 arglist[MAX_ARGS+1] = {0};
 	CHAR16 *argv[MAX_ARGS];
 	INTN argc = 0;
+	INTN c = 0;
 	INTN err = 0;
 
 	INTN PgCnt = -1;
@@ -119,9 +120,9 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
 #endif
 	
 #if DEBUG
-	Print(L"Now try argify\n");
+	Print(L"Now try ParseCmdLine\n");
 #endif
-	argc = argify(arglist, info->LoadOptionsSize, argv);
+	argc = ParseCmdLine(argv, arglist, info->LoadOptionsSize);
 #if DEBUG
 	Print(L"argc = %d\n", argc);
 #endif

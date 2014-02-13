@@ -89,7 +89,7 @@ BS_Code   0000000071902000-00000000721FEFFF 00000000000008FD 000000000000000F
 
 #include <efi.h>
 #include <efilib.h>
-#include <argify.h>
+#include <ParseCmdLine.h>
 
 
 #define MAX_NUM_PAGES 0x000000000F000000
@@ -115,6 +115,7 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
 	CHAR16 *argv[MAX_ARGS];
 	INTN argc = 0;
 	INTN err = 0;
+	INTN c = 0;
 
 	INTN AllocType = -1;
 	INTN MemType = -1;
@@ -149,9 +150,9 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
 #endif
 	
 #if DEBUG
-	Print(L"Now try argify\n");
+	Print(L"Now try ParseCmdLine\n");
 #endif
-	argc = argify(arglist, info->LoadOptionsSize, argv);
+	argc = ParseCmdLine(argv, arglist, info->LoadOptionsSize);
 #if DEBUG
 	Print(L"argc = %d\n", argc);
 #endif
