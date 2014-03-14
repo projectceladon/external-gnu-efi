@@ -61,8 +61,11 @@ OBJS  = $(FILES:%=%.o)
 
 SUBDIRS = ia32 x86_64 ia64 runtime
 
+LIBDIRINSTALL = $(INSTALLROOT)/$(LIBDIR)
+
 all: libsubdirs libefi.a
 
+.PHONY: libsubdirs
 libsubdirs:
 	for sdir in $(SUBDIRS); do mkdir -p $$sdir; done
 
@@ -71,9 +74,13 @@ libefi.a: $(patsubst %,libefi.a(%),$(OBJS))
 clean:
 	rm -f libefi.a *~ $(OBJS) */*.o
 
-install: libefi.a
-	mkdir -p $(INSTALLROOT)/$(LIBDIR)
-	$(INSTALL) -m 644 libefi.a $(INSTALLROOT)/$(LIBDIR)
+$(LIBDIRINSTALL):
+	mkdir -p $@
+
+$(LIBDIRINSTALL)/libefi.a: libefi.a | $(LIBDIRINSTALL)
+	$(INSTALL) -m 644 $< $(dir $@)
+
+install: $(LIBDIRINSTALL)/libefi.a
 
 include $(SRCDIR)/../Make.rules
 
