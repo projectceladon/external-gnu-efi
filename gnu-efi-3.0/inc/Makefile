@@ -8,20 +8,32 @@ TOPDIR = $(SRCDIR)/..
 
 CDIR=$(TOPDIR)/..
 
+INCDIRINSTALL = $(INSTALLROOT)$(PREFIX)/include/efi
+
+SRCHEADERS = $(wildcard $(SRCDIR)/*.h) \
+             $(wildcard $(SRCDIR)/protocol/*.h) \
+             $(wildcard $(SRCDIR)/$(ARCH)/*.h)
+ifeq ($(ARCH),ia64)
+ SRCHEADERS += $(wildcard $(SRCDIR)/protocol/$(ARCH)/*.h)
+endif
+
+HEADERS = $(patsubst $(SRCDIR)/%,%,$(SRCHEADERS))
+
 all:
 
 clean:
 
-install:
-	mkdir -p $(INSTALLROOT)$(PREFIX)/include/efi
-	mkdir -p $(INSTALLROOT)$(PREFIX)/include/efi/protocol
-	mkdir -p $(INSTALLROOT)$(PREFIX)/include/efi/$(ARCH)
-	$(INSTALL) -m 644 $(SRCDIR)/*.h $(INSTALLROOT)$(PREFIX)/include/efi
-	$(INSTALL) -m 644 $(SRCDIR)/protocol/*.h $(INSTALLROOT)$(PREFIX)/include/efi/protocol
-	$(INSTALL) -m 644 $(SRCDIR)/$(ARCH)/*.h $(INSTALLROOT)$(PREFIX)/include/efi/$(ARCH)
-ifeq ($(ARCH),ia64)
-	mkdir -p $(INSTALLROOT)$(PREFIX)/include/efi/protocol/ia64
-	$(INSTALL) -m 644 $(SRCDIR)/protocol/ia64/*.h $(INSTALLROOT)$(PREFIX)/include/efi/protocol/ia64
-endif
+$(INCDIRINSTALL) \
+$(INCDIRINSTALL)/protocol \
+$(INCDIRINSTALL)/$(ARCH) \
+$(INCDIRINSTALL)/protocol/$(ARCH):
+	mkdir -p $@
+
+.SECONDEXPANSION:
+
+$(INCDIRINSTALL)/%.h: %.h | $$(dir $$@)
+	$(INSTALL) -m 644 $< $(dir $@)
+
+install: $(addprefix $(INCDIRINSTALL)/,$(HEADERS))
 
 include $(SRCDIR)/../Make.rules
