@@ -78,7 +78,11 @@ $(SUBDIRS):
 
 clean:
 	rm -f *~
-	@for d in $(SUBDIRS); do $(MAKE) -C $$d -f $(SRCDIR)/$$d/Makefile SRCDIR=$(SRCDIR)/$$d  clean; done
+	@for d in $(SUBDIRS); do \
+		if [ -d $$d ]; then \
+			$(MAKE) -C $$d -f $(SRCDIR)/$$d/Makefile SRCDIR=$(SRCDIR)/$$d clean; \
+		fi; \
+	done
 
 install:
 	@for d in $(SUBDIRS); do \
