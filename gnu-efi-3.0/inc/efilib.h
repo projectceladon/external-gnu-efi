@@ -78,6 +78,9 @@ extern EFI_GUID AcpiTableGuid;
 extern EFI_GUID SMBIOSTableGuid;
 extern EFI_GUID SalSystemTableGuid;
 
+extern EFI_GUID SimplePointerProtocol;
+extern EFI_GUID AbsolutePointerProtocol;
+
 //
 // EFI Variable strings
 //
