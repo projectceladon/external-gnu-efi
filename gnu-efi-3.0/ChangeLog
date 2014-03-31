@@ -1,3 +1,60 @@
+2014-03-17 Nigel Croxon <nigel.croxon@hp.com>
+
+   Add support for the simple pointer and absolute pointer protocols
+       
+    Signed-off-by: John Cronin <johncronin@users.sf.net>
+    Signed-off-by: Nigel Croxon <nigel.croxon@hp.com>
+
+2014-03-14 Nigel Croxon <nigel.croxon@hp.com>
+
+    Trying to recurse into subdirectories of object files may lead
+    to an error if the directory doesn't exist. Even when cleaning.
+	    
+    Signed-off-by: Sylvain Gault <sylvain.gault@gmail.com>
+    Signed-off-by: Nigel Croxon <nigel.croxon@hp.com>
+
+2014-03-14 Nigel Croxon <nigel.croxon@hp.com>
+
+    Make install used to copy files unconditionnally to their
+    destination. However, if the destination is used by another
+    Makefile, it will always see modified files. "install" target
+    now only updates the files when they need to.
+
+    Signed-off-by: Sylvain Gault <sylvain.gault@gmail.com>
+    Signed-off-by: Nigel Croxon <nigel.croxon@hp.com>
+
+2014-02-13 Nigel Croxon <nigel.croxon@hp.com>
+
+    Patch GNU-EFI to remove the ELILO code
+        
+    Signed-off-by: Jerry Hoemann <jerry.hoemann@hp.com>
+    Signed-off-by: Nigel Croxon <nigel.croxon@hp.com>
+
+2014-02-13 Nigel Croxon <nigel.croxon@hp.com>
+
+    Initialize Status before calling GrowBuffer()
+    Status must be initialized before calling GrowBuffer() as it may
+    otherwise be uninitialized or set to EFI_BUFFER_TOO_SMALL by
+    other functions.
+
+    Signed-off-by: Gene Cumm <gene.cumm@gmail.com>
+    Signed-off-by: Nigel Croxon <nigel.croxon@hp.com>
+
+2014-01-23 Nigel Croxon <nigel.croxon@hp.com>
+
+    These changes allow manually overridden SRCDIR (current source
+    directory) and TOPDIR (top of source tree) to separate the
+    build directory from the source tree.
+	        
+    Signed-off-by: Gene Cumm <gene.cumm@gmail.com>
+    Signed-off-by: Nigel Croxon <nigel.croxon@hp.com>
+
+2014-01-16 Nigel Croxon <nigel.croxon@hp.com>
+    compilation: fix uninitialized variables warning
+        
+    Signed-off-by: Jeremy Compostella <jeremy.compostella@intel.com>
+    Signed-off-by: Nigel Croxon <nigel.croxon@hp.com>
+
 2014-01-13 Nigel Croxon <nigel.croxon@hp.com>
    Implement VSPrint function, prints a formatted unicode string to a buffer.
        
