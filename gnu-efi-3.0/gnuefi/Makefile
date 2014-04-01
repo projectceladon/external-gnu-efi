@@ -43,7 +43,7 @@ include $(SRCDIR)/../Make.defaults
 TOPDIR = $(SRCDIR)/..
 
 CDIR=$(TOPDIR)/..
-FILES	= reloc_$(ARCH) setjmp_$(ARCH)
+FILES	= reloc_$(ARCH)  
 
 OBJS	= $(FILES:%=%.o)
 

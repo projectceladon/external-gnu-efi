@@ -1,3 +1,10 @@
+2014-04-01 Nigel Croxon <nigel.croxon@hp.com>
+
+   Removed GPL code setjmp_ia32.S, setjmp_ia64.S, setjmp_x86_64.S
+   Not used anymore.
+
+   Signed-off-by: Nigel Croxon <nigel.croxon@hp.com>
+
 2014-03-17 Nigel Croxon <nigel.croxon@hp.com>
 
    Add support for the simple pointer and absolute pointer protocols
