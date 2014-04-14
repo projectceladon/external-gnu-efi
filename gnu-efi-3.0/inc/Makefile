@@ -23,6 +23,8 @@ all:
 
 clean:
 
+	rm -f *~
+
 $(INCDIRINSTALL) \
 $(INCDIRINSTALL)/protocol \
 $(INCDIRINSTALL)/$(ARCH) \
