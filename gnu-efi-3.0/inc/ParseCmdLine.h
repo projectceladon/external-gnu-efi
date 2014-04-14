@@ -8,5 +8,5 @@
 #define MAX_ARGS 512
 
 
-int ParseCmdLine(CHAR16 **argv[],  CHAR16 *buf, int len);
+int ParseCmdLine(CHAR16 *argv[],  CHAR16 *buf, int len);
 

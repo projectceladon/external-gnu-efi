@@ -88,7 +88,9 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
 	CHAR16 arglist[MAX_ARGS+1] = {0};
 	CHAR16 *argv[MAX_ARGS];
 	INTN argc = 0;
+#if DEBUG
 	INTN c = 0;
+#endif
 	INTN err = 0;
 
 	INTN PgCnt = -1;

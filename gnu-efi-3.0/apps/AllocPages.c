@@ -115,8 +115,9 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
 	CHAR16 *argv[MAX_ARGS];
 	INTN argc = 0;
 	INTN err = 0;
+#if DEBUG
 	INTN c = 0;
-
+#endif
 	INTN AllocType = -1;
 	INTN MemType = -1;
 	INTN NumPages = -1;
