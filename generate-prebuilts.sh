@@ -13,11 +13,11 @@
 #    Android uses x86, but EFI uses ia32.
 #
 
-PREBUILT_TOP=$ANDROID_BUILD_TOP/prebuilts/tools
+PREBUILT_TOP=$ANDROID_BUILD_TOP/hardware/intel/efi_prebuilts/
 
 copy_to_prebuilts()
 {
-    DEST_DIR=$PREBUILT_TOP/linux-$2/gnu-efi/
+    DEST_DIR=$PREBUILT_TOP/gnu-efi/linux-$2/
 
     # Sanity check
     if [ ! -s "gnuefi/crt0-efi-$1.o" ] ; then
@@ -51,14 +51,14 @@ while getopts "a" opt; do
 done
 
 # Create prebuilts directory (if not already exists)
-mkdir -p $PREBUILT_TOP/linux-x86/gnu-efi/include/efi/
-mkdir -p $PREBUILT_TOP/linux-x86/gnu-efi/include/efi/ia32
-mkdir -p $PREBUILT_TOP/linux-x86/gnu-efi/include/efi/protocol
-mkdir -p $PREBUILT_TOP/linux-x86/gnu-efi/lib
-mkdir -p $PREBUILT_TOP/linux-x86_64/gnu-efi/include/efi/
-mkdir -p $PREBUILT_TOP/linux-x86_64/gnu-efi/include/efi/x86_64
-mkdir -p $PREBUILT_TOP/linux-x86_64/gnu-efi/include/efi/protocol
-mkdir -p $PREBUILT_TOP/linux-x86_64/gnu-efi/lib
+mkdir -p $PREBUILT_TOP/gnu-efi/linux-x86/include/efi/
+mkdir -p $PREBUILT_TOP/gnu-efi/linux-x86/include/efi/ia32
+mkdir -p $PREBUILT_TOP/gnu-efi/linux-x86/include/efi/protocol
+mkdir -p $PREBUILT_TOP/gnu-efi/linux-x86/lib
+mkdir -p $PREBUILT_TOP/gnu-efi/linux-x86_64/include/efi/
+mkdir -p $PREBUILT_TOP/gnu-efi/linux-x86_64/include/efi/x86_64
+mkdir -p $PREBUILT_TOP/gnu-efi/linux-x86_64/include/efi/protocol
+mkdir -p $PREBUILT_TOP/gnu-efi/linux-x86_64/lib
 
 make ARCH=x86_64 clean
 make ARCH=ia32 clean
@@ -74,11 +74,11 @@ copy_to_prebuilts ia32 x86
 make ARCH=ia32 clean
 
 if [ "$add_prebuilts" == "1" ]; then
-    export GIT_DIR=$PREBUILT_TOP/.git
-    export GIT_WORK_TREE=$PREBUILT_TOP
+    export GIT_DIR=$PREBUILT_TOP/gnu-efi/.git
+    export GIT_WORK_TREE=$PREBUILT_TOP/gnu-efi
 
-    git add -- linux-x86/gnu-efi/*
-    git add -- linux-x86_64/gnu-efi/*
+    git add -- linux-x86/*
+    git add -- linux-x86_64/*
 
     unset GIT_DIR
     unset GIT_WORK_TREE
