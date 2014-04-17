@@ -74,6 +74,7 @@ typedef struct _pitem {
     BOOLEAN     PadBefore;
     BOOLEAN     Comma;
     BOOLEAN     Long;
+    BOOLEAN     LongLong;
 } PRINT_ITEM;
 
 
@@ -982,6 +983,7 @@ Returns:
         Item.PadBefore = TRUE;
         Item.Comma = FALSE;
         Item.Long = FALSE;
+        Item.LongLong = FALSE;
         Item.Item.Ascii = FALSE;
         Item.Item.pw = NULL;
         ps->RestoreAttr = 0;
@@ -1059,17 +1061,20 @@ Returns:
                 break;
 
             case 'l':
-                Item.Long = TRUE;
+                if (Item.Long)
+                    Item.LongLong = TRUE;
+                else
+                    Item.Long = TRUE;
                 break;
 
             case 'X':
-                Item.Width = Item.Long ? 16 : 8;
+                Item.Width = Item.Long ? (Item.LongLong ? 16 : (sizeof(UINTN) * 2)) : 8;
                 Item.Pad = '0';
             case 'x':
                 Item.Item.pw = Item.Scratch;
                 ValueToHex (
                     Item.Item.pw, 
-                    Item.Long ? va_arg(ps->args, UINT64) : va_arg(ps->args, UINT32)
+                    Item.Long ? (Item.LongLong ? va_arg(ps->args, UINT64) :  va_arg(ps->args, UINTN)) : va_arg(ps->args, UINT32)
                     );
 
                 break;
@@ -1085,7 +1090,7 @@ Returns:
                 ValueToString (
                     Item.Item.pw, 
                     Item.Comma, 
-                    Item.Long ? va_arg(ps->args, UINT64) : va_arg(ps->args, UINT32)
+                    Item.Long ? (Item.LongLong ? va_arg(ps->args, UINT64) :  va_arg(ps->args, UINTN)) : va_arg(ps->args, UINT32)
                     );
                 break
                     ;
