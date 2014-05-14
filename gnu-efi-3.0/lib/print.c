@@ -180,7 +180,7 @@ _PoolPrint (
     IN CHAR16   *Buffer
     );
 
-INTN
+INTN EFIAPI
 DbgPrint (
     IN INTN      mask,
     IN CHAR8     *fmt,
