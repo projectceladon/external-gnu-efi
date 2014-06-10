@@ -501,6 +501,36 @@ Returns:
     return len;
 }
 
+CHAR16 *
+VPoolPrint (
+    IN CHAR16           *fmt,
+    va_list             args
+    )
+/*++
+
+Routine Description:
+
+    Prints a formatted unicode string to allocated pool using va_list argument.
+    The caller must free the resulting buffer.
+
+Arguments:
+
+    fmt         - The format string
+    args        - The arguments in va_list form
+
+Returns:
+
+    Allocated buffer with the formatted string printed in it.  
+    The caller must free the allocated buffer.   The buffer
+    allocation is not packed.
+
+--*/
+{
+    POOL_PRINT          spc;
+    ZeroMem (&spc, sizeof(spc));
+    _PoolCatPrint (fmt, args, &spc, _PoolPrint);
+    return spc.str;
+}
 
 CHAR16 *
 PoolPrint (
@@ -526,17 +556,13 @@ Returns:
 
 --*/
 {
-    POOL_PRINT          spc;
-    va_list             args;
-
-    ZeroMem (&spc, sizeof(spc));
+    va_list args;
+    CHAR16 *pool;
     va_start (args, fmt);
-    _PoolCatPrint (fmt, args, &spc, _PoolPrint);
+    pool = VPoolPrint(fmt, args);
     va_end (args);
-    return spc.str;
+    return pool;
 }
-
-
 
 CHAR16 *
 CatPrint (
