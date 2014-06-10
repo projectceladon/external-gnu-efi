@@ -418,6 +418,12 @@ VSPrint (
     );
 
 CHAR16 *
+VPoolPrint (
+    IN CHAR16           *fmt,
+    va_list             args
+    );
+
+CHAR16 *
 PoolPrint (
     IN CHAR16           *fmt,
     ...
