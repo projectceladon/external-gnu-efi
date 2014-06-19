@@ -258,7 +258,7 @@ Returns:
 
     if (ps.SetAttr) {
         ps.Attr = attr;
-        ps.SetAttr (ps.Context, attr);
+        uefi_call_wrapper(ps.SetAttr, 2, ps.Context, attr);
     }
 
     _Print (&ps);
@@ -271,7 +271,7 @@ Returns:
     //
 
     if (ps.SetAttr) {
-        ps.SetAttr (ps.Context, SavedAttribute);
+        uefi_call_wrapper(ps.SetAttr, 2, ps.Context, SavedAttribute);
     }
     
     return 0;
