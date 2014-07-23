@@ -18,16 +18,11 @@ Abstract:
 Revision History
 
 --*/
-#ifdef __GNUC__
-#include "stdarg.h"
-#else
-#define _INTSIZEOF(n)   ( (sizeof(n) + sizeof(UINTN) - 1) & ~(sizeof(UINTN) - 1) )
 
-typedef CHAR8 * va_list;
+typedef __builtin_va_list va_list;
 
-#define va_start(ap,v)  ( ap = (va_list)&v + _INTSIZEOF(v) )
-#define va_arg(ap,t)    ( *(t *)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)) )
-#define va_end(ap)  ( ap = (va_list)0 )
+#define va_start(v,l)	__builtin_va_start(v,l)
+#define va_end(v)	__builtin_va_end(v)
+#define va_arg(v,l)	__builtin_va_arg(v,l)
+#define va_copy(d,s)	__builtin_va_copy(d,s)
 #endif
-
-#endif  /* _INC_STDARG */
