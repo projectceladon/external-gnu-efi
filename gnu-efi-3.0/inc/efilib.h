@@ -144,6 +144,12 @@ EFIDebugVariable (
     VOID
     );
 
+INTN
+GetShellArgcArgv(
+    EFI_HANDLE ImageHandle,
+    CHAR16 **Argv[]  /* Statically allocated */
+    );
+
 VOID
 SetCrc (
     IN OUT EFI_TABLE_HEADER *Hdr
