@@ -7,6 +7,5 @@
 
 #define MAX_ARGS 512
 
-
-int ParseCmdLine(CHAR16 *argv[],  CHAR16 *buf, int len);
-
+/* buf will be updated in-place */
+INTN ParseCmdLine(CHAR16 *argv[MAX_ARGS],  CHAR16 *buf, UINTN len);
