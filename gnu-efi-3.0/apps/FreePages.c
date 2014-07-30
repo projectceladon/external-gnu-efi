@@ -87,7 +87,7 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
 
 	CHAR16 arglist[MAX_ARGS+1] = {0};
 	CHAR16 *argv[MAX_ARGS];
-	INTN argc = 0;
+	INTN argc, arglen;
 #if DEBUG
 	INTN c = 0;
 #endif
@@ -116,15 +116,19 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
 #if DEBUG
 	Print(L"Set up arglist\n");
 #endif
-	CopyMem(arglist, info->LoadOptions, info->LoadOptionsSize);
+	arglen = info->LoadOptionsSize;
+	if (arglen > sizeof(arglist))
+		arglen = sizeof(arglist);
+
+	CopyMem(arglist, info->LoadOptions, arglen);
 #if DEBUG
 	Print(L"arglist = <%s>\n", arglist);
 #endif
-	
+
 #if DEBUG
 	Print(L"Now try ParseCmdLine\n");
 #endif
-	argc = ParseCmdLine(argv, arglist, info->LoadOptionsSize);
+	argc = ParseCmdLine(argv, arglist, arglen);
 #if DEBUG
 	Print(L"argc = %d\n", argc);
 #endif
