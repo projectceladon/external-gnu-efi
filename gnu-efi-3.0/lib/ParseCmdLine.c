@@ -11,28 +11,25 @@
 
 
 
-int ParseCmdLine(CHAR16 *argv[],  CHAR16 *LoadOptions, int LoadOptionSize)
+INTN ParseCmdLine(CHAR16 *argv[MAX_ARGS], CHAR16 *buf, UINTN len)
 {
-    CHAR16 *buf = LoadOptions;
-    int     len = LoadOptionSize;
-    int	    i;	  // Index into buf
+    CHAR16 *arg_start, *c;
+    INTN argc = 0;
 
-    int argc = 0;	// Count of argv entries
-    argv[argc++] = LoadOptions ? LoadOptions: L"##NoName##";
+    if (len < 2)
+      return -1;
 
-    for ( i = 0;  len > 0;   len-= 2, i++)  {
-	if ( buf[i] == L' ' ) {
-	    // end of current argv entry, start next?
-	    buf[i] = L'\0';
-	    do {
-	    	len -= 2;
-		i++;
-	    } while( (buf[i] == L' ') && (len > 0) );
-	    argv[argc] = &buf[i];
-	    if ( len > 0 ) argc++;
-	}
+    buf[(len / 2) - 1] = L'\0';
+    for (c = arg_start = buf ; *c ; ++c) {
+      if (*c == L' ') {
+        *c = L'\0';
+        if (argc < MAX_ARGS) argv[argc++] = arg_start;
+        arg_start = c + 1;
+      }
     }
-    argv[argc] = NULL;
+
+    if ((*arg_start != L'\0') && (argc < MAX_ARGS))
+      argv[argc++] = arg_start;
 
     return argc;
 }
