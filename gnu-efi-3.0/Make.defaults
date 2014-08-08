@@ -107,6 +107,14 @@ ifeq ($(ARCH),x86_64)
   endif
 endif
 
+#
+# Set HAVE_EFI_OBJCOPY if objcopy understands --target efi-[app|bsdrv|rtdrv],
+# otherwise we need to compose the PE/COFF header using the assembler
+#
+ifneq ($(ARCH),aarch64)
+export HAVE_EFI_OBJCOPY=y
+endif
+
 # Generic compilation flags
 INCDIR  += -I$(SRCDIR) -I$(TOPDIR)/inc -I$(TOPDIR)/inc/$(ARCH) \
            -I$(TOPDIR)/inc/protocol
