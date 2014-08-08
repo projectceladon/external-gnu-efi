@@ -7,6 +7,18 @@
 # define MAX_CMDLINE_ARGC 32
 #endif
 
+/*
+  Parse LoadedImage options area, called only in case the regular
+  shell protos are not available.
+
+  Format of LoadedImage->LoadOptions appears to be a
+  single-space-separated list of args (looks like the shell already
+  pre-parses the input, it apparently folds several consecutive spaces
+  into one):
+    argv[0] space argv[1] (etc.) argv[N] space \0 cwd \0 other data
+  For safety, we support the trailing \0 without a space before, as
+  well as several consecutive spaces (-> several args).
+*/
 INTN
 GetShellArgcArgv(
     EFI_HANDLE ImageHandle,
