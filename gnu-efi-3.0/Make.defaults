@@ -51,19 +51,19 @@ LIBDIR 	     := $(PREFIX)/lib
 INSTALL	     := install
 
 # Compilation tools
-prefix       := /usr/bin/
-CC           := $(prefix)gcc
-AS           := $(prefix)as
-LD           := $(prefix)ld
-AR           := $(prefix)ar
-RANLIB       := $(prefix)ranlib
-OBJCOPY      := $(prefix)objcopy
+HOSTCC       := $(prefix)gcc
+CC           := $(prefix)$(CROSS_COMPILE)gcc
+AS           := $(prefix)$(CROSS_COMPILE)as
+LD           := $(prefix)$(CROSS_COMPILE)ld
+AR           := $(prefix)$(CROSS_COMPILE)ar
+RANLIB       := $(prefix)$(CROSS_COMPILE)ranlib
+OBJCOPY      := $(prefix)$(CROSS_COMPILE)objcopy
 
 
 # Host/target identification
-OS	     := $(shell uname -s)
-HOSTARCH     := $(shell $(CC) -dumpmachine | cut -f1 -d- | sed s,i[3456789]86,ia32,)
-ARCH	     := $(shell uname -m | sed s,i[3456789]86,ia32,)
+OS           := $(shell uname -s)
+HOSTARCH     := $(shell $(HOSTCC) -dumpmachine | cut -f1 -d- | sed s,i[3456789]86,ia32,)
+ARCH         := $(shell $(CC) -dumpmachine | cut -f1 -d-| sed s,i[3456789]86,ia32,)
 
 # FreeBSD (and possibly others) reports amd64 instead of x86_64
 ifeq ($(ARCH),amd64)
