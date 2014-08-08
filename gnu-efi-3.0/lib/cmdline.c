@@ -19,8 +19,14 @@ GetShellArgcArgv(
   static CHAR16 *Argv[MAX_CMDLINE_ARGC], *ArgStart, *c;
   UINTN Argc = 0, BufLen;
 
-  Status = uefi_call_wrapper(BS->HandleProtocol, 3,
-                             ImageHandle, &LoadedImageProtocol, &LoadedImage);
+  Status = uefi_call_wrapper(BS->OpenProtocol, 6,
+                             ImageHandle,
+                             &LoadedImageProtocol,
+                             &LoadedImage,
+                             ImageHandle,
+                             NULL,
+                             EFI_OPEN_PROTOCOL_GET_PROTOCOL
+                             );
   if (EFI_ERROR(Status))
     return -1;
 
