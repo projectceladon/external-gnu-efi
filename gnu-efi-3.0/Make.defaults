@@ -74,18 +74,6 @@ endif
 # Variables below derived from variables above
 #
 
-GCCVERSION   := $(shell $(CC) -dumpversion | cut -f1 -d.)
-GCCMINOR     := $(shell $(CC) -dumpversion | cut -f2 -d.)
-
-# Rely on GCC MS ABI support?
-GCCNEWENOUGH := $(shell ( [ $(GCCVERSION) -gt "4" ]           \
-                          || ( [ $(GCCVERSION) -eq "4" ]      \
-                               && [ $(GCCMINOR) -ge "7" ] ) ) \
-                        && echo 1)
-ifeq ($(GCCNEWENOUGH),1)
-  CPPFLAGS += -DGNU_EFI_USE_MS_ABI -maccumulate-outgoing-args --std=c11
-endif
-
 # Arch-specific compilation flags
 CPPFLAGS += -DCONFIG_$(ARCH)
 
@@ -101,6 +89,18 @@ ifeq ($(ARCH),ia32)
 endif
 
 ifeq ($(ARCH),x86_64)
+  GCCVERSION   := $(shell $(CC) -dumpversion | cut -f1 -d.)
+  GCCMINOR     := $(shell $(CC) -dumpversion | cut -f2 -d.)
+
+  # Rely on GCC MS ABI support?
+  GCCNEWENOUGH := $(shell ( [ $(GCCVERSION) -gt "4" ]           \
+                            || ( [ $(GCCVERSION) -eq "4" ]      \
+                                 && [ $(GCCMINOR) -ge "7" ] ) ) \
+                          && echo 1)
+  ifeq ($(GCCNEWENOUGH),1)
+    CPPFLAGS += -DGNU_EFI_USE_MS_ABI -maccumulate-outgoing-args --std=c11
+  endif
+
   CFLAGS += -mno-red-zone -mno-mmx -mno-sse
   ifeq ($(HOSTARCH),ia32)
     ARCH3264 = -m64
