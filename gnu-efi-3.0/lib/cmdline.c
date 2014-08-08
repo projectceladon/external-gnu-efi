@@ -1,5 +1,9 @@
 #include "lib.h"
 
+#include "efiprot.h"
+#include "efishellintf.h"
+#include "efishellparm.h"
+
 #ifndef MAX_ARGV_CONTENTS_SIZE
 # define MAX_CMDLINE_SIZE 1024
 #endif
@@ -19,8 +23,9 @@
   For safety, we support the trailing \0 without a space before, as
   well as several consecutive spaces (-> several args).
 */
+static
 INTN
-GetShellArgcArgv(
+GetShellArgcArgvFromLoadedImage(
     EFI_HANDLE ImageHandle,
     CHAR16 **ResultArgv[]
     )
@@ -62,6 +67,55 @@ GetShellArgcArgv(
   if ((*ArgStart != L'\0') && (Argc < MAX_CMDLINE_ARGC))
     Argv[Argc++] = ArgStart;
 
+  // Print(L"Got argc/argv from loaded image proto\n");
   *ResultArgv = Argv;
   return Argc;
+}
+
+INTN GetShellArgcArgv(EFI_HANDLE ImageHandle, CHAR16 **Argv[])
+{
+  // Code inspired from EDK2's
+  // ShellPkg/Library/UefiShellCEntryLib/UefiShellCEntryLib.c (BSD)
+  EFI_STATUS Status;
+  static const EFI_GUID EfiShellParametersProtocolGuid
+      = EFI_SHELL_PARAMETERS_PROTOCOL_GUID;
+  static const EFI_GUID ShellInterfaceProtocolGuid
+      = SHELL_INTERFACE_PROTOCOL_GUID;
+  EFI_SHELL_PARAMETERS_PROTOCOL *EfiShellParametersProtocol = NULL;
+  EFI_SHELL_INTERFACE *EfiShellInterfaceProtocol = NULL;
+
+  Status = uefi_call_wrapper(BS->OpenProtocol, 6,
+                             ImageHandle,
+                             &EfiShellParametersProtocolGuid,
+                             (VOID **)&EfiShellParametersProtocol,
+                             ImageHandle,
+                             NULL,
+                             EFI_OPEN_PROTOCOL_GET_PROTOCOL
+                             );
+  if (!EFI_ERROR(Status))
+  {
+    // use shell 2.0 interface
+    // Print(L"Got argc/argv from shell intf proto\n");
+    *Argv = EfiShellParametersProtocol->Argv;
+    return EfiShellParametersProtocol->Argc;
+  }
+
+  // try to get shell 1.0 interface instead.
+  Status = uefi_call_wrapper(BS->OpenProtocol, 6,
+                             ImageHandle,
+                             &ShellInterfaceProtocolGuid,
+                             (VOID **)&EfiShellInterfaceProtocol,
+                             ImageHandle,
+                             NULL,
+                             EFI_OPEN_PROTOCOL_GET_PROTOCOL
+                             );
+  if (!EFI_ERROR(Status))
+  {
+    // Print(L"Got argc/argv from shell params proto\n");
+    *Argv = EfiShellInterfaceProtocol->Argv;
+    return EfiShellInterfaceProtocol->Argc;
+  }
+
+  // shell 1.0 and 2.0 interfaces failed
+  return GetShellArgcArgvFromLoadedImage(ImageHandle, Argv);
 }
