@@ -57,6 +57,10 @@ ifeq ($(ARCH),x86_64)
 FILES += $(ARCH)/callwrap $(ARCH)/efi_stub
 endif
 
+ifeq ($(ARCH),arm)
+FILES += $(ARCH)/lib1funcs $(ARCH)/div64
+endif
+
 OBJS  = $(FILES:%=%.o)
 
 SUBDIRS = ia32 x86_64 ia64 runtime
