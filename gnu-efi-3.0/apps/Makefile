@@ -55,7 +55,7 @@ endif
 LDFLAGS		+= -shared -Bsymbolic -L../lib -L../gnuefi $(CRTOBJS)
 
 LOADLIBES	+= -lefi -lgnuefi
-LOADLIBES	+= $(shell $(CC) $(ARCH3264) -print-libgcc-file-name)
+LOADLIBES	+= $(LIBGCC)
 LOADLIBES	+= -T $(LDSCRIPT)
 
 TARGET_APPS = t.efi t2.efi t3.efi t4.efi t5.efi t6.efi \
