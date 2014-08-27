@@ -24,6 +24,7 @@ Revision History
 #include "efilibplat.h"
 #include "efilink.h"
 #include "efirtlib.h"
+#include "efistdarg.h"
 #include "pci22.h"
 #include "libsmbios.h"
 
@@ -76,6 +77,9 @@ extern EFI_GUID MpsTableGuid;
 extern EFI_GUID AcpiTableGuid;
 extern EFI_GUID SMBIOSTableGuid;
 extern EFI_GUID SalSystemTableGuid;
+
+extern EFI_GUID SimplePointerProtocol;
+extern EFI_GUID AbsolutePointerProtocol;
 
 //
 // EFI Variable strings
@@ -138,6 +142,12 @@ InitializeUnicodeSupport (
 VOID
 EFIDebugVariable (
     VOID
+    );
+
+INTN
+GetShellArgcArgv(
+    EFI_HANDLE ImageHandle,
+    CHAR16 **Argv[]  /* Statically allocated */
     );
 
 VOID
@@ -392,11 +402,31 @@ Print (
     );
 
 UINTN
+VPrint (
+    IN CHAR16   *fmt,
+    va_list     args
+    );
+
+UINTN
 SPrint (
     OUT CHAR16  *Str,
     IN UINTN    StrSize,
     IN CHAR16   *fmt,
     ...
+    );
+
+UINTN
+VSPrint (
+    OUT CHAR16  *Str,
+    IN UINTN    StrSize,
+    IN CHAR16   *fmt,
+    va_list     args
+    );
+
+CHAR16 *
+VPoolPrint (
+    IN CHAR16           *fmt,
+    va_list             args
     );
 
 CHAR16 *

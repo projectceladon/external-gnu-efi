@@ -50,41 +50,29 @@ PREFIX       := /usr/local
 LIBDIR 	     := $(PREFIX)/lib
 INSTALL	     := install
 
+# Compilation tools
+HOSTCC       := $(prefix)gcc
+CC           := $(prefix)$(CROSS_COMPILE)gcc
+AS           := $(prefix)$(CROSS_COMPILE)as
+LD           := $(prefix)$(CROSS_COMPILE)ld
+AR           := $(prefix)$(CROSS_COMPILE)ar
+RANLIB       := $(prefix)$(CROSS_COMPILE)ranlib
+OBJCOPY      := $(prefix)$(CROSS_COMPILE)objcopy
+
+
 # Host/target identification
-OS	     := $(shell uname -s)
-HOSTARCH     := $(shell uname -m | sed s,i[3456789]86,ia32,)
-ARCH	     := $(shell uname -m | sed s,i[3456789]86,ia32,)
+OS           := $(shell uname -s)
+HOSTARCH     := $(shell $(HOSTCC) -dumpmachine | cut -f1 -d- | sed s,i[3456789]86,ia32,)
+ARCH         := $(shell $(CC) -dumpmachine | cut -f1 -d-| sed s,i[3456789]86,ia32,)
 
 # FreeBSD (and possibly others) reports amd64 instead of x86_64
 ifeq ($(ARCH),amd64)
   override ARCH := x86_64
 endif
 
-# Compilation tools
-prefix       := /usr/bin/
-CC           := $(prefix)gcc
-AS           := $(prefix)as
-LD           := $(prefix)ld
-AR           := $(prefix)ar
-RANLIB       := $(prefix)ranlib
-OBJCOPY      := $(prefix)objcopy
-
-
 #
 # Variables below derived from variables above
 #
-
-GCCVERSION   := $(shell $(CC) -dumpversion | cut -f1 -d.)
-GCCMINOR     := $(shell $(CC) -dumpversion | cut -f2 -d.)
-
-# Rely on GCC MS ABI support?
-GCCNEWENOUGH := $(shell ( [ $(GCCVERSION) -gt "4" ]           \
-                          || ( [ $(GCCVERSION) -eq "4" ]      \
-                               && [ $(GCCMINOR) -ge "7" ] ) ) \
-                        && echo 1)
-ifeq ($(GCCNEWENOUGH),1)
-  CPPFLAGS += -DGNU_EFI_USE_MS_ABI -maccumulate-outgoing-args --std=c11
-endif
 
 # Arch-specific compilation flags
 CPPFLAGS += -DCONFIG_$(ARCH)
@@ -101,10 +89,40 @@ ifeq ($(ARCH),ia32)
 endif
 
 ifeq ($(ARCH),x86_64)
+  GCCVERSION   := $(shell $(CC) -dumpversion | cut -f1 -d.)
+  GCCMINOR     := $(shell $(CC) -dumpversion | cut -f2 -d.)
+
+  # Rely on GCC MS ABI support?
+  GCCNEWENOUGH := $(shell ( [ $(GCCVERSION) -gt "4" ]           \
+                            || ( [ $(GCCVERSION) -eq "4" ]      \
+                                 && [ $(GCCMINOR) -ge "7" ] ) ) \
+                          && echo 1)
+  ifeq ($(GCCNEWENOUGH),1)
+    CPPFLAGS += -DGNU_EFI_USE_MS_ABI -maccumulate-outgoing-args --std=c11
+  endif
+
   CFLAGS += -mno-red-zone -mno-mmx -mno-sse
   ifeq ($(HOSTARCH),ia32)
     ARCH3264 = -m64
   endif
+endif
+
+#
+# Set HAVE_EFI_OBJCOPY if objcopy understands --target efi-[app|bsdrv|rtdrv],
+# otherwise we need to compose the PE/COFF header using the assembler
+#
+ifneq ($(ARCH),aarch64)
+ifneq ($(ARCH),arm)
+export HAVE_EFI_OBJCOPY=y
+endif
+endif
+
+ifneq ($(ARCH),arm)
+export LIBGCC=$(shell $(CC) $(ARCH3264) -print-libgcc-file-name)
+endif
+
+ifeq ($(ARCH),arm)
+CFLAGS += -marm
 endif
 
 # Generic compilation flags

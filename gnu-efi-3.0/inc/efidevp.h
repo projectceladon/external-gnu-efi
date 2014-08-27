@@ -68,10 +68,10 @@ typedef struct _EFI_DEVICE_PATH {
             }
 
 
-
 /*
- *
+ * Hardware Device Path (UEFI 2.4 specification, version 2.4 § 9.3.2.)
  */
+
 #define HARDWARE_DEVICE_PATH            0x01
 
 #define HW_PCI_DP                       0x01
@@ -84,7 +84,7 @@ typedef struct _PCI_DEVICE_PATH {
 #define HW_PCCARD_DP                    0x02
 typedef struct _PCCARD_DEVICE_PATH {
         EFI_DEVICE_PATH                 Header;
-        UINT8                           SocketNumber;
+        UINT8                           FunctionNumber ;
 } PCCARD_DEVICE_PATH;
 
 #define HW_MEMMAP_DP                    0x03
@@ -115,8 +115,9 @@ typedef struct _CONTROLLER_DEVICE_PATH {
         UINT32              Controller;
 } CONTROLLER_DEVICE_PATH;
 
+
 /*
- *
+ * ACPI Device Path (UEFI 2.4 specification, version 2.4 § 9.3.3 and 9.3.4.)
  */
 #define ACPI_DEVICE_PATH                 0x02
 
@@ -136,6 +137,12 @@ typedef struct _EXPANDED_ACPI_HID_DEVICE_PATH {
 	UINT8				HidStr[1];
 } EXPANDED_ACPI_HID_DEVICE_PATH;
 
+#define ACPI_ADR_DP 3
+typedef struct _ACPI_ADR_DEVICE_PATH {
+    EFI_DEVICE_PATH Header ;
+    UINT32 ADR ;
+} ACPI_ADR_DEVICE_PATH ;
+
 //
 // EISA ID Macro
 // EISA ID Definition 32-bits
@@ -149,8 +156,10 @@ typedef struct _EXPANDED_ACPI_HID_DEVICE_PATH {
 
 #define PNP_EISA_ID_MASK        0xffff
 #define EISA_ID_TO_NUM(_Id)     ((_Id) >> 16)
+
+
 /*
- *
+ * Messaging Device Path (UEFI 2.4 specification, version 2.4 § 9.3.5.)
  */
 #define MESSAGING_DEVICE_PATH           0x03 
 
@@ -177,6 +186,18 @@ typedef struct _FIBRECHANNEL_DEVICE_PATH {
         UINT64                          Lun;
 } FIBRECHANNEL_DEVICE_PATH;
 
+/**
+ * Fibre Channel Ex SubType.
+ * UEFI 2.0 specification version 2.4 § 9.3.5.6.
+ */
+#define MSG_FIBRECHANNELEX_DP 21
+typedef struct _FIBRECHANNELEX_DEVICE_PATH {
+    EFI_DEVICE_PATH Header ;
+    UINT32 Reserved ;
+    UINT8 WWN[ 8 ] ; /* World Wide Name */
+    UINT8 Lun[ 8 ] ; /* Logical unit, T-10 SCSI Architecture Model 4 specification */
+} FIBRECHANNELEX_DEVICE_PATH ;
+
 #define MSG_1394_DP                     0x04
 typedef struct _F1394_DEVICE_PATH {
         EFI_DEVICE_PATH                 Header;
@@ -190,6 +211,41 @@ typedef struct _USB_DEVICE_PATH {
         UINT8                           Port;
         UINT8                           Endpoint;
 } USB_DEVICE_PATH;
+
+/**
+ * SATA Device Path SubType.
+ * UEFI 2.0 specification version 2.4 § 9.3.5.6.
+ */
+#define MSG_SATA_DP 18
+typedef struct _SATA_DEVICE_PATH {
+    EFI_DEVICE_PATH Header ;
+    UINT16 HBAPortNumber ;
+    UINT16 PortMultiplierPortNumber ;
+    UINT16 Lun ; /* Logical Unit Number */
+} SATA_DEVICE_PATH ;
+
+/**
+ * USB WWID Device Path SubType.
+ * UEFI 2.0 specification version 2.4 § 9.3.5.7.
+ */
+#define MSG_USB_WWID_DP 16
+typedef struct _USB_WWID_DEVICE_PATH {
+    EFI_DEVICE_PATH Header ;
+    UINT16 InterfaceNumber ;
+    UINT16 VendorId ;
+    UINT16 ProductId ;
+    CHAR16 SerialNumber[ 1 ] ; /* UTF-16 characters of the USB serial number */
+} USB_WWID_DEVICE_PATH ;
+
+/**
+ * Device Logical Unit SubType.
+ * UEFI 2.0 specification version 2.4 § 9.3.5.8.
+ */
+#define MSG_DEVICE_LOGICAL_UNIT_DP 17
+typedef struct _DEVICE_LOGICAL_UNIT_DEVICE_PATH {
+    EFI_DEVICE_PATH Header ;
+    UINT8 Lun ; /* Logical Unit Number */
+} DEVICE_LOGICAL_UNIT_DEVICE_PATH ;
 
 #define MSG_USB_CLASS_DP                0x0F
 typedef struct _USB_CLASS_DEVICE_PATH {
@@ -223,6 +279,9 @@ typedef struct _IPv4_DEVICE_PATH {
         UINT16                          RemotePort;
         UINT16                          Protocol;
         BOOLEAN                         StaticIpAddress;
+        /* new from UEFI version 2, code must check Length field in Header */
+        EFI_IPv4_ADDRESS                GatewayIpAddress ;
+        EFI_IPv4_ADDRESS                SubnetMask ;
 } IPv4_DEVICE_PATH;
 
 #define MSG_IPv6_DP                     0x0d
@@ -233,16 +292,30 @@ typedef struct _IPv6_DEVICE_PATH {
         UINT16                          LocalPort;
         UINT16                          RemotePort;
         UINT16                          Protocol;
-        BOOLEAN                         StaticIpAddress;
+        BOOLEAN                         IPAddressOrigin ;
+        /* new from UEFI version 2, code must check Length field in Header */
+        UINT8                           PrefixLength ;
+        EFI_IPv6_ADDRESS                GatewayIpAddress ;
 } IPv6_DEVICE_PATH;
+
+/**
+ * Device Logical Unit SubType.
+ * UEFI 2.0 specification version 2.4 § 9.3.5.8.
+ */
+#define MSG_VLAN_DP 20
+typedef struct _VLAN_DEVICE_PATH {
+    EFI_DEVICE_PATH Header ;
+    UINT16 VlanId ;
+} VLAN_DEVICE_PATH;
 
 #define MSG_INFINIBAND_DP               0x09
 typedef struct _INFINIBAND_DEVICE_PATH {
         EFI_DEVICE_PATH                 Header;
-        UINT32                          Reserved;
-        UINT64                          NodeGuid;
-        UINT64                          IocGuid;
-        UINT64                          DeviceId;
+        UINT32                          ResourceFlags ;
+        UINT64                          PortGid ;
+        UINT64                          ServiceId ;
+        UINT64                          TargetPortId ;
+        UINT64                          DeviceId ;
 } INFINIBAND_DEVICE_PATH;
 
 #define MSG_UART_DP                     0x0e
@@ -264,8 +337,28 @@ typedef struct _UART_DEVICE_PATH {
 #define DEVICE_PATH_MESSAGING_VT_100 \
     { 0xdfa66065, 0xb419, 0x11d3,  {0x9a, 0x2d, 0x00, 0x90, 0x27, 0x3f, 0xc1, 0x4d}  }
 
+#define DEVICE_PATH_MESSAGING_VT_100_PLUS \
+    { 0x7baec70b , 0x57e0 , 0x4c76 , { 0x8e , 0x87 , 0x2f , 0x9e , 0x28 , 0x08 , 0x83 , 0x43 } }
+
+#define DEVICE_PATH_MESSAGING_VT_UTF8 \
+    { 0xad15a0d6 , 0x8bec , 0x4acf , { 0xa0 , 0x73 , 0xd0 , 0x1d , 0xe7 , 0x7e , 0x2d , 0x88 } }
+
+#define EFI_PC_ANSI_GUID \
+    { 0xe0c14753 , 0xf9be , 0x11d2 , 0x9a , 0x0c , 0x00 , 0x90 , 0x27 , 0x3f , 0xc1 , 0x4d }
+
+#define EFI_VT_100_GUID \
+    { 0xdfa66065 , 0xb419 , 0x11d3 , 0x9a , 0x2d , 0x00 , 0x90 , 0x27 , 0x3f , 0xc1 , 0x4d }
+
+#define EFI_VT_100_PLUS_GUID \
+    { 0x7baec70b , 0x57e0 , 0x4c76 , 0x8e , 0x87 , 0x2f , 0x9e , 0x28 , 0x08 , 0x83 , 0x43 }
+
+#define EFI_VT_UTF8_GUID \
+    { 0xad15a0d6 , 0x8bec , 0x4acf , 0xa0 , 0x73 , 0xd0 , 0x1d , 0xe7 , 0x7e , 0x2d , 0x88 }
 
 
+/*
+ * Media Device Path (UEFI 2.4 specification, version 2.4 § 9.3.6.)
+ */
 #define MEDIA_DEVICE_PATH               0x04
 
 #define MEDIA_HARDDRIVE_DP              0x01
@@ -310,8 +403,44 @@ typedef struct _MEDIA_PROTOCOL_DEVICE_PATH {
         EFI_GUID                        Protocol;
 } MEDIA_PROTOCOL_DEVICE_PATH;
 
+/**
+ * PIWG Firmware File SubType.
+ * UEFI 2.0 specification version 2.4 § 9.3.6.6.
+ */
+#define MEDIA_PIWG_FW_FILE_DP 6
+typedef struct _MEDIA_FW_VOL_FILEPATH_DEVICE_PATH {
+    EFI_DEVICE_PATH Header ;
+    EFI_GUID FvFileName ;
+} MEDIA_FW_VOL_FILEPATH_DEVICE_PATH ;
 
+/**
+ * PIWG Firmware Volume Device Path SubType.
+ * UEFI 2.0 specification version 2.4 § 9.3.6.7.
+ */
+#define MEDIA_PIWG_FW_VOL_DP 7
+typedef struct _MEDIA_FW_VOL_DEVICE_PATH {
+    EFI_DEVICE_PATH Header ;
+    EFI_GUID FvName ;
+} MEDIA_FW_VOL_DEVICE_PATH ;
+
+/**
+ * Media relative offset range device path.
+ * UEFI 2.0 specification version 2.4 § 9.3.6.8.
+ */
+#define MEDIA_RELATIVE_OFFSET_RANGE_DP 8
+typedef struct _MEDIA_RELATIVE_OFFSET_RANGE_DEVICE_PATH {
+    EFI_DEVICE_PATH Header ;
+    UINT32 Reserved ;
+    UINT64 StartingOffset ;
+    UINT64 EndingOffset ;
+} MEDIA_RELATIVE_OFFSET_RANGE_DEVICE_PATH ;
+
+
+/*
+ * BIOS Boot Specification Device Path (UEFI 2.4 specification, version 2.4 § 9.3.7.)
+ */
 #define BBS_DEVICE_PATH                 0x05
+
 #define BBS_BBS_DP                      0x01
 typedef struct _BBS_BBS_DEVICE_PATH {
         EFI_DEVICE_PATH                 Header;

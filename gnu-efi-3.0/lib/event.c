@@ -43,6 +43,7 @@ LibCreateProtocolNotifyEvent (
 		    NotifyContext,
 		    &Event
 		    );
+    if ( EFI_ERROR( Status ) ) return NULL ;
     ASSERT (!EFI_ERROR(Status));
 
     //
@@ -56,7 +57,7 @@ LibCreateProtocolNotifyEvent (
                     Event, 
                     Registration
                     );
-
+    if ( EFI_ERROR( Status ) ) return NULL ;
     ASSERT (!EFI_ERROR(Status));
 
     //

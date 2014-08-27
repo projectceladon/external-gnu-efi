@@ -49,5 +49,6 @@ Revision History
 #include "efiip.h"
 #include "efiudp.h"
 #include "efitcp.h"
+#include "efipoint.h"
 
 #endif

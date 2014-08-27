@@ -258,7 +258,7 @@ Returns:
 
     if (ps.SetAttr) {
         ps.Attr = attr;
-        ps.SetAttr (ps.Context, attr);
+        uefi_call_wrapper(ps.SetAttr, 2, ps.Context, attr);
     }
 
     _Print (&ps);
@@ -271,7 +271,7 @@ Returns:
     //
 
     if (ps.SetAttr) {
-        ps.SetAttr (ps.Context, SavedAttribute);
+        uefi_call_wrapper(ps.SetAttr, 2, ps.Context, SavedAttribute);
     }
     
     return 0;
@@ -422,6 +422,48 @@ _PoolCatPrint (
 
 
 UINTN
+VSPrint (
+    OUT CHAR16  *Str,
+    IN UINTN    StrSize,
+    IN CHAR16   *fmt,
+    va_list     args
+    )
+/*++
+
+Routine Description:
+
+    Prints a formatted unicode string to a buffer using a va_list
+
+Arguments:
+
+    Str         - Output buffer to print the formatted string into
+
+    StrSize     - Size of Str.  String is truncated to this size.
+                  A size of 0 means there is no limit
+
+    fmt         - The format string
+
+    args        - va_list
+
+
+Returns:
+
+    String length returned in buffer
+
+--*/
+{
+    POOL_PRINT          spc;
+
+    spc.str    = Str;
+    spc.maxlen = StrSize / sizeof(CHAR16) - 1;
+    spc.len    = 0;
+
+    _PoolCatPrint (fmt, args, &spc, _SPrint);
+
+    return spc.len;
+}
+
+UINTN
 SPrint (
     OUT CHAR16  *Str,
     IN UINTN    StrSize,
@@ -449,20 +491,46 @@ Returns:
 
 --*/
 {
-    POOL_PRINT          spc;
-    va_list             args;
-
+    va_list          args;
+    UINTN            len;
 
     va_start (args, fmt);
-    spc.str    = Str;
-    spc.maxlen = StrSize / sizeof(CHAR16) - 1;
-    spc.len    = 0;
-
-    _PoolCatPrint (fmt, args, &spc, _SPrint);
+    len = VSPrint(Str, StrSize, fmt, args);
     va_end (args);
-    return spc.len;
+
+    return len;
 }
 
+CHAR16 *
+VPoolPrint (
+    IN CHAR16           *fmt,
+    va_list             args
+    )
+/*++
+
+Routine Description:
+
+    Prints a formatted unicode string to allocated pool using va_list argument.
+    The caller must free the resulting buffer.
+
+Arguments:
+
+    fmt         - The format string
+    args        - The arguments in va_list form
+
+Returns:
+
+    Allocated buffer with the formatted string printed in it.  
+    The caller must free the allocated buffer.   The buffer
+    allocation is not packed.
+
+--*/
+{
+    POOL_PRINT          spc;
+    ZeroMem (&spc, sizeof(spc));
+    _PoolCatPrint (fmt, args, &spc, _PoolPrint);
+    return spc.str;
+}
 
 CHAR16 *
 PoolPrint (
@@ -488,17 +556,13 @@ Returns:
 
 --*/
 {
-    POOL_PRINT          spc;
-    va_list             args;
-
-    ZeroMem (&spc, sizeof(spc));
+    va_list args;
+    CHAR16 *pool;
     va_start (args, fmt);
-    _PoolCatPrint (fmt, args, &spc, _PoolPrint);
+    pool = VPoolPrint(fmt, args);
     va_end (args);
-    return spc.str;
+    return pool;
 }
-
-
 
 CHAR16 *
 CatPrint (
