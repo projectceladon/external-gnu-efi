@@ -16,6 +16,13 @@ Revision History
 
 #include "lib.h"
 
+/*
+ * We convert 32 bit values to pointers. In 64 bit mode the compiler will issue a
+ * warning stating that the value is too small for the pointer:
+ * "warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]"
+ * we can safely ignore them here.
+ */
+#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
 
 EFI_STATUS
 LibGetSmbiosSystemGuidAndSerialNumber (
