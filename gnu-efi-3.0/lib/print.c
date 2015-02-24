@@ -346,7 +346,7 @@ _SPrint (
     if (spc->len < spc->maxlen) {
         spc->str[spc->len] = 0;
     } else if (spc->maxlen) {
-        spc->str[spc->maxlen-1] = 0;
+        spc->str[spc->maxlen] = 0;
     }
 
     return 0;
