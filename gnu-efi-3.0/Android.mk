@@ -40,7 +40,7 @@ LOCAL_SRC_FILES := \
     lib/print.c \
     lib/dpath.c \
     lib/$(TARGET_EFI_ARCH_NAME)/initplat.c \
-    lib/$(TARGET_EFI_ARCH_NAME)/callwrap.c
+    lib/$(TARGET_EFI_ARCH_NAME)/math.c
 
 LOCAL_EXPORT_C_INCLUDE_DIRS := $(SHARED_C_INCLUDES)
 
@@ -50,7 +50,7 @@ LOCAL_C_INCLUDES := \
 
 ifeq ($(TARGET_UEFI_ARCH),x86_64)
 LOCAL_SRC_FILES += \
-	lib/x86_64/math.c
+	lib/x86_64/callwrap.c
 endif
 
 include $(BUILD_EFI_STATIC_LIBRARY)
