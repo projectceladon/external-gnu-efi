@@ -64,6 +64,7 @@ LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/inc/protocol \
     bionic/libc/include \
     bionic/libc/kernel/uapi \
+    bionic/libc/kernel/android/uapi \
     bionic/libc/kernel/uapi/asm-x86 \
     bionic/libc/arch-$(LOADER_ARCH)/include
 include $(BUILD_EFI_STATIC_LIBRARY)
