@@ -11,6 +11,8 @@ SHARED_C_INCLUDES := \
     $(LOCAL_PATH)/inc/$(TARGET_EFI_ARCH_NAME) \
     $(LOCAL_PATH)/inc/protocol
 
+LOCAL_CLANG_EXCEPTION_PROJECTS += $(LOCAL_PATH)
+
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := libefi
