@@ -39,7 +39,7 @@ GetShellArgcArgvFromLoadedImage(
   Status = uefi_call_wrapper(BS->OpenProtocol, 6,
                              ImageHandle,
                              &LoadedImageProtocol,
-                             &LoadedImage,
+                             (void **)&LoadedImage,
                              ImageHandle,
                              NULL,
                              EFI_OPEN_PROTOCOL_GET_PROTOCOL
@@ -86,7 +86,7 @@ INTN GetShellArgcArgv(EFI_HANDLE ImageHandle, CHAR16 **Argv[])
 
   Status = uefi_call_wrapper(BS->OpenProtocol, 6,
                              ImageHandle,
-                             &EfiShellParametersProtocolGuid,
+                             (EFI_GUID *)&EfiShellParametersProtocolGuid,
                              (VOID **)&EfiShellParametersProtocol,
                              ImageHandle,
                              NULL,
@@ -103,7 +103,7 @@ INTN GetShellArgcArgv(EFI_HANDLE ImageHandle, CHAR16 **Argv[])
   // try to get shell 1.0 interface instead.
   Status = uefi_call_wrapper(BS->OpenProtocol, 6,
                              ImageHandle,
-                             &ShellInterfaceProtocolGuid,
+                             (EFI_GUID *)&ShellInterfaceProtocolGuid,
                              (VOID **)&EfiShellInterfaceProtocol,
                              ImageHandle,
                              NULL,
