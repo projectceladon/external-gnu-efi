@@ -14,7 +14,7 @@ SHARED_C_INCLUDES := \
 LOCAL_CLANG_EXCEPTION_PROJECTS += $(LOCAL_PATH)
 
 include $(CLEAR_VARS)
-
+LOCAL_CFLAGS += -Wno-error
 LOCAL_MODULE := libefi
 LOCAL_SRC_FILES := \
     lib/boxdraw.c \
