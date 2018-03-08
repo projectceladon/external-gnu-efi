@@ -11,8 +11,6 @@ SHARED_C_INCLUDES := \
     $(LOCAL_PATH)/inc/$(TARGET_EFI_ARCH_NAME) \
     $(LOCAL_PATH)/inc/protocol
 
-LOCAL_CLANG_EXCEPTION_PROJECTS += $(LOCAL_PATH)
-
 include $(CLEAR_VARS)
 LOCAL_CFLAGS += -Wno-error
 LOCAL_MODULE := libefi
@@ -42,6 +40,7 @@ LOCAL_SRC_FILES := \
     lib/print.c \
     lib/dpath.c \
     lib/$(TARGET_EFI_ARCH_NAME)/initplat.c \
+    lib/$(TARGET_EFI_ARCH_NAME)/efi_stub.S \
     lib/$(TARGET_EFI_ARCH_NAME)/math.c
 
 LOCAL_EXPORT_C_INCLUDE_DIRS := $(SHARED_C_INCLUDES)
