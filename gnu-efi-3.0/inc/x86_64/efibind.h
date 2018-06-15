@@ -23,7 +23,7 @@ Revision History
 #endif
 
 #if defined(GNU_EFI_USE_MS_ABI)
-    #if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7))
+    #if (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7))) || (defined(__clang__) && (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 2)))
         #define HAVE_USE_MS_ABI 1
     #else
         #error Compiler is too old for GNU_EFI_USE_MS_ABI
