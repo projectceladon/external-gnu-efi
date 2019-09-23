@@ -103,6 +103,11 @@ typedef struct _pstate {
     struct _pitem  *Item;
 } PRINT_STATE;
 
+#ifdef INSTALLER_LOG_FILE
+extern CHAR8 logfile_buf[4096 + 1024];
+extern UINTN logfile_pos;
+#endif
+
 //
 // Internal fucntions
 //
@@ -625,10 +630,31 @@ Returns:
     va_list     args;
     UINTN       back;
 
+#ifdef INSTALLER_LOG_FILE
+   CHAR16 buf16[512];
+   CHAR8 buf8[512];
+   UINTN buflen;
+   UINTN i;
+#endif
+
     va_start (args, fmt);
     back = _IPrint ((UINTN) -1, (UINTN) -1, ST->ConOut, fmt, NULL, args);
-    va_end (args);
-    return back;
+
+#ifdef INSTALLER_LOG_FILE
+	buflen=VSPrint(buf16, sizeof(buf16), (CHAR16 *)fmt, args) + 1;
+	for (i = 0; i < buflen; i++) {
+	      if (buf16[i] > 0x7F)
+	         return buflen;
+          buf8[i] = (CHAR8)buf16[i];
+          if (!buf16[i])
+             break;
+    }
+   buf8[buflen - 1] = '\0';
+   CopyMem (logfile_buf + logfile_pos, buf8, buflen * sizeof(CHAR8));
+   logfile_pos += buflen;
+#endif
+   va_end (args);
+   return back;
 }
 
 UINTN

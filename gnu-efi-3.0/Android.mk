@@ -43,6 +43,12 @@ LOCAL_SRC_FILES := \
     lib/$(TARGET_EFI_ARCH_NAME)/efi_stub.S \
     lib/$(TARGET_EFI_ARCH_NAME)/math.c
 
+ifeq ($(TARGET_BUILD_VARIANT),userdebug)
+    ifeq ($(OUTPUT_INSTALLERLOG_FILE),true)
+        LOCAL_CFLAGS += -DINSTALLER_LOG_FILE
+    endif
+endif
+
 LOCAL_EXPORT_C_INCLUDE_DIRS := $(SHARED_C_INCLUDES)
 
 LOCAL_C_INCLUDES := \
