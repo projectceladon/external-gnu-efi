@@ -403,9 +403,7 @@ LibInsertToTailOfBootOrder (
                 VarSize, (VOID*) NewBootOptionArray
                 );
 
-    if (NewBootOptionArray) {
-        FreePool (NewBootOptionArray);
-    }
+    FreePool (NewBootOptionArray);
     if (BootOptionArray) {
         FreePool (BootOptionArray);
     }
