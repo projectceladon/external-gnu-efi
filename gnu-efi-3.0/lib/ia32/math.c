@@ -140,7 +140,7 @@ DivU64x32 (
 // divide 64bit by 32bit and get a 64bit result
 // N.B. only works for 31bit divisors!!
 {
-#if 0 && defined(__GNUC__) && !defined(__MINGW32__)
+#if 1 && defined(__GNUC__) && !defined(__MINGW32__)
     if (Remainder)
         *Remainder = Dividend % Divisor;
     return Dividend / Divisor;
