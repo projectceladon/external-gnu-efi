@@ -75,7 +75,7 @@ ReadPort (
         IN  UINTN                       Port
         )
 {
-    UINT32       Data;
+    UINT32       Data = 0;
     EFI_STATUS  Status EFI_UNUSED;
 
     Status = uefi_call_wrapper(GlobalIoFncs->Io.Read, 5, GlobalIoFncs, Width, (UINT64)Port, 1, &Data);
@@ -105,7 +105,7 @@ ReadPciConfig (
         IN  UINTN                       Address
         )
 {
-    UINT32       Data;
+    UINT32       Data = 0;
     EFI_STATUS  Status EFI_UNUSED;
 
     Status = uefi_call_wrapper(GlobalIoFncs->Pci.Read, 5, GlobalIoFncs, Width, (UINT64)Address, 1, &Data);
