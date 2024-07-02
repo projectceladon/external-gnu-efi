@@ -57,7 +57,10 @@ LibCreateProtocolNotifyEvent (
                     Event,
                     Registration
                     );
-    if ( EFI_ERROR( Status ) ) return NULL ;
+    if ( EFI_ERROR( Status ) ) {
+        uefi_call_wrapper(BS->CloseEvent, 1, Event);
+        return NULL ;
+    }
     ASSERT (!EFI_ERROR(Status));
 
     //

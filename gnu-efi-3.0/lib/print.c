@@ -1433,7 +1433,7 @@ DumpHex (
     CHAR8           *Data, Val[50], Str[20], c;
     UINTN           Size, Index;
 
-    UINTN           ScreenCount;
+    UINTN           ScreenCount = 0; // Avoid variable being unitialized
     UINTN           TempColumn;
     UINTN           ScreenSize;
     CHAR16          ReturnStr[1];
