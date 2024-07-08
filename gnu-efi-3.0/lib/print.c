@@ -1435,7 +1435,7 @@ DumpHex (
 
     UINTN           ScreenCount = 0; // Avoid variable being unitialized
     UINTN           TempColumn;
-    UINTN           ScreenSize;
+    UINTN           ScreenSize = 0;
     CHAR16          ReturnStr[1];
 
 
